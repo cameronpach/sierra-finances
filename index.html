@@ -58,11 +58,12 @@ input,select,textarea,button{font-family:inherit}
 .header-actions{display:flex;gap:8px;align-items:center}
 .month-selector{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:50px;padding:8px 14px;cursor:pointer;color:white;font-size:13px;font-weight:700;transition:transform 0.15s}
 .month-selector:active{transform:scale(0.92)}
-.sync-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:50px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 0.15s;position:relative}
-.sync-btn:active{transform:scale(0.85)}
-.sync-btn svg{width:16px;height:16px}
+.sync-btn{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.25);border-radius:50px;padding:7px 14px;display:flex;align-items:center;gap:6px;cursor:pointer;transition:all 0.2s;position:relative;white-space:nowrap}
+.sync-btn:active{transform:scale(0.92);background:rgba(255,255,255,0.28)}
+.sync-btn svg{width:13px;height:13px;flex-shrink:0}
 .sync-btn.spinning svg{animation:spin 1s linear infinite}
-.sync-time{position:absolute;bottom:-18px;right:0;font-size:9px;color:rgba(255,255,255,0.5);white-space:nowrap;font-weight:600}
+.sync-btn-label{font-size:12px;font-weight:700;color:white;letter-spacing:0.2px}
+.sync-time{font-size:10px;color:rgba(255,255,255,0.6);font-weight:600}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 .month-summary{display:flex;gap:8px;position:relative;z-index:1}
@@ -265,6 +266,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
       <div class="header-actions">
         <button class="sync-btn" onclick="triggerHaptic();reloadDashboard(this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 1 0 2.13-5.87L21 8"/></svg>
+          <span class="sync-btn-label">Sync</span>
           <span class="sync-time" id="syncTime"></span>
         </button>
         <button class="month-selector" onclick="triggerHaptic();openMonthModal()">
@@ -302,7 +304,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
     <div class="section-title">Recent Transactions</div>
     <div class="tx-list" id="txList"><div class="loading-state"><div class="loading-spinner"></div></div></div>
   </div>
-  <div class="footer">Made with ❤️ by Sierra Chavez</div>
+  <div class="footer">Made with ❤️ by Cameron Pachman</div>
 </div>
 
 <!-- INSIGHTS -->
@@ -342,7 +344,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
     <div class="bar-chart-container" id="yearlyBarChart"><div class="loading-state" style="width:100%;height:100%"><div class="loading-spinner"></div></div></div>
     <div class="bar-labels" id="yearlyBarLabels"></div>
   </div>
-  <div class="footer">Made with ❤️ by Sierra Chavez</div>
+  <div class="footer">Made with ❤️ by Cameron Pachman</div>
 </div>
 
 <!-- NAV -->
@@ -761,7 +763,7 @@ function renderInsights(data){
   // Biggest purchases — transfers excluded
   const top5=topList.sort((a,b)=>b._exp-a._exp).slice(0,5);
   document.getElementById('topExpensesList').innerHTML=top5.length
-    ?top5.map(tx=>`<div class="top-expense-row"><div class="top-exp-left"><div class="top-exp-icon">${tx._emoji}</div><div><div class="top-exp-name">${tx.transaction}</div><div class="top-exp-date">${fmtDate(tx.date)}</div></div></div><div class="top-exp-amt">-$${fmt(tx._exp)}</div></div>`).join('')
+    ?top5.map(tx=>`<div class="top-expense-row"><div class="top-exp-left"><div class="top-exp-icon">${tx._emoji}</div><div><div class="top-exp-name">${tx.transaction}</div><div class="top-exp-date">${fmtDate(tx.date)}${tx.note?' · '+tx.note:''}</div></div></div><div class="top-exp-amt">-$${fmt(tx._exp)}</div></div>`).join('')
     :'<div style="text-align:center;font-size:13px;color:var(--muted);padding:10px">No purchases logged yet.</div>';
 
   if(!yearlyDataLoaded)fetchYearlyData();
