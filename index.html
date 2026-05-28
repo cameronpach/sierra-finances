@@ -5,23 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Sierra's Finances">
-<title>Sierra's Finances</title>
+<meta name="apple-mobile-web-app-title" content="My Finances">
+<title>Cameron's Finances</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231d4ed8'/><text y='.9em' font-size='72' x='50%' text-anchor='middle' font-family='sans-serif' fill='white'>$</text></svg>">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#f2f2f7;--card:#fff;--navy:#831843;--blue:#db2777;--blue2:#f43f5e;
-  --blue-light:#fdf2f8;--green:#34c759;--green-bg:#e8f8ec;--red:#ff3b30;
+  --bg:#f2f2f7;--card:#fff;--navy:#0f2447;--blue:#007aff;--blue2:#3b82f6;
+  --blue-light:#e5f1ff;--green:#34c759;--green-bg:#e8f8ec;--red:#ff3b30;
   --red-bg:#ffebe9;--text:#1c1c1e;--muted:#8e8e93;--border:#e5e5ea;
   --input-bg:#f2f2f7;--shadow:0 4px 24px rgba(0,0,0,0.06);--radius:20px;
   --apple-cash:#d1d1d6;
 }
 @media(prefers-color-scheme:dark){
   :root{
-    --bg:#000;--card:#1c1c1e;--navy:#9d174d;--text:#f5f5f7;--muted:#8e8e93;
+    --bg:#000;--card:#1c1c1e;--navy:#1e3a8a;--text:#f5f5f7;--muted:#8e8e93;
     --border:#38383a;--shadow:0 4px 24px rgba(0,0,0,0.4);--input-bg:#2c2c2e;
-    --blue-light:rgba(219,39,119,0.15);--blue:#db2777;--blue2:#f43f5e;
+    --blue-light:rgba(10,132,255,0.15);--blue:#0a84ff;--blue2:#3b82f6;
     --green-bg:rgba(48,209,88,0.15);--green:#30d158;
     --red-bg:rgba(255,69,58,0.15);--red:#ff453a;
     --apple-cash:#636366;
@@ -36,7 +36,7 @@ input,select,textarea,button{font-family:inherit}
 .nav-btn:active{transform:scale(0.85);opacity:0.7}
 .nav-btn.active{color:var(--blue);background:var(--blue-light)}
 .nav-btn svg{width:22px;height:22px}
-.nav-plus{width:58px;height:58px;background:linear-gradient(135deg,#db2777,#f43f5e);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:-24px;box-shadow:0 6px 20px rgba(219,39,119,0.4);transition:transform 0.15s cubic-bezier(0.34,1.56,0.64,1)}
+.nav-plus{width:58px;height:58px;background:linear-gradient(135deg,var(--blue),var(--blue2));border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:-24px;box-shadow:0 6px 20px rgba(0,122,255,0.4);transition:transform 0.15s cubic-bezier(0.34,1.56,0.64,1)}
 .nav-plus:active{transform:scale(0.85)}
 .nav-plus svg{width:28px;height:28px;stroke:white}
 
@@ -49,21 +49,53 @@ input,select,textarea,button{font-family:inherit}
 .ptr-spinner{width:24px;height:24px;border:3px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.8s linear infinite}
 
 /* HEADERS */
-.page-header{background:linear-gradient(160deg,#831843 0%,#be185d 100%);padding:max(env(safe-area-inset-top,20px),20px) 24px 24px;position:relative;overflow:hidden}
+.page-header{background:linear-gradient(160deg,var(--navy) 0%,#1e3a8a 100%);padding:max(env(safe-area-inset-top,20px),20px) 24px 24px;position:relative;overflow:hidden}
 .page-header::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.04)}
-.page-header::after{content:'';position:absolute;bottom:-60px;left:-20px;width:220px;height:220px;border-radius:50%;background:rgba(244,63,94,0.15)}
+.page-header::after{content:'';position:absolute;bottom:-60px;left:-20px;width:220px;height:220px;border-radius:50%;background:rgba(59,130,246,0.1)}
 .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;position:relative;z-index:1}
 .header-greeting .time-label{font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:4px}
 .header-greeting h1{font-size:28px;color:white;font-weight:700;letter-spacing:-0.5px}
 .header-actions{display:flex;gap:8px;align-items:center}
 .month-selector{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:50px;padding:8px 14px;cursor:pointer;color:white;font-size:13px;font-weight:700;transition:transform 0.15s}
 .month-selector:active{transform:scale(0.92)}
-.sync-btn{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.25);border-radius:50px;padding:7px 14px;display:flex;align-items:center;gap:6px;cursor:pointer;transition:all 0.2s;position:relative;white-space:nowrap}
-.sync-btn:active{transform:scale(0.92);background:rgba(255,255,255,0.28)}
-.sync-btn svg{width:13px;height:13px;flex-shrink:0}
-.sync-btn.spinning svg{animation:spin 1s linear infinite}
-.sync-btn-label{font-size:12px;font-weight:700;color:white;letter-spacing:0.2px}
-.sync-time{font-size:10px;color:rgba(255,255,255,0.6);font-weight:600}
+.sync-btn{
+background:rgba(255,255,255,0.14);
+border:1px solid rgba(255,255,255,0.18);
+border-radius:999px;
+width:40px;
+height:40px;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+transition:all 0.18s ease;
+position:relative;
+backdrop-filter:blur(8px);
+-webkit-backdrop-filter:blur(8px)
+}
+.sync-btn:active{
+transform:scale(0.9)
+}
+.sync-btn:hover{
+background:rgba(255,255,255,0.2)
+}
+.sync-btn svg{
+width:18px;
+height:18px;
+stroke-width:2.2
+}
+.sync-btn.spinning svg{
+animation:spin 0.9s linear infinite
+}
+.sync-time{
+position:absolute;
+bottom:-18px;
+right:-4px;
+font-size:9px;
+color:rgba(255,255,255,0.55);
+white-space:nowrap;
+font-weight:700
+}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 .month-summary{display:flex;gap:8px;position:relative;z-index:1}
@@ -72,6 +104,18 @@ input,select,textarea,button{font-family:inherit}
 .summary-pill .s-amount{font-size:16px;font-weight:800;color:white;letter-spacing:-0.3px}
 .summary-pill .s-amount.green{color:#30d158}
 .summary-pill .s-amount.red{color:#ff453a}
+
+.summary-pill{cursor:pointer;transition:all 0.2s}
+.summary-pill.active-filter{background:rgba(255,255,255,0.22);border:1px solid rgba(255,255,255,0.35);transform:scale(1.02)}
+
+.summary-pill{
+opacity:0.92
+}
+.summary-pill.active-filter{
+opacity:1
+}
+
+
 
 /* SEARCH — FIXED FLEXBOX LAYOUT */
 .search-wrap{padding:16px 24px 0}
@@ -96,12 +140,13 @@ input,select,textarea,button{font-family:inherit}
 
 .account-card{min-width:145px;background:var(--card);border-radius:20px;padding:16px;box-shadow:var(--shadow);flex-shrink:0;transition:transform 0.15s}
 .account-card:active{transform:scale(0.92)}
-.account-card.savings{border-top:3px solid #db2777}
-.account-card.checking{border-top:3px solid #f43f5e}
-.account-card.car{border-top:3px solid #06b6d4}
-.account-card.phone{border-top:3px solid #10b981}
-.account-card.gas{border-top:3px solid #f59e0b}
-.account-card.creditcard{border-top:3px solid #881337}
+.account-card.checking{border-top:3px solid #007aff}
+.account-card.hysa{border-top:3px solid #34c759}
+.account-card.discover{border-top:3px solid #ff3b30}
+.account-card.emergency{border-top:3px solid #af52de}
+.account-card.venmo{border-top:3px solid #32ade6}
+.account-card.apple{border-top:3px solid var(--apple-cash)}
+.account-card.cash{border-top:3px solid #ff9500}
 .account-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:16px}
 .account-name{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:0.5px;margin-bottom:5px;text-transform:uppercase}
 .account-balance{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.5px}
@@ -138,6 +183,29 @@ input,select,textarea,button{font-family:inherit}
 
 .footer{text-align:center;padding:30px 24px 120px;font-size:12px;font-weight:600;color:var(--muted);opacity:0.6}
 
+
+.comparison-card{
+background:var(--card);
+margin:16px 24px 0;
+padding:18px 20px;
+border-radius:22px;
+box-shadow:var(--shadow)
+}
+.comparison-label{
+font-size:11px;
+font-weight:800;
+letter-spacing:1px;
+text-transform:uppercase;
+color:var(--muted);
+margin-bottom:8px
+}
+.comparison-text{
+font-size:15px;
+font-weight:600;
+line-height:1.5;
+color:var(--text)
+}
+
 /* INSIGHTS */
 .insights-top-card{background:var(--card);border-radius:24px;padding:24px;margin:16px 24px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center}
 .donut-svg-wrap{position:relative;width:180px;height:180px;margin-bottom:24px;display:flex;align-items:center;justify-content:center}
@@ -153,8 +221,8 @@ input,select,textarea,button{font-family:inherit}
 .top-expense-row{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--card);border-radius:16px;margin-bottom:8px;box-shadow:var(--shadow)}
 .top-exp-left{display:flex;align-items:center;gap:12px}
 .top-exp-icon{font-size:22px}
-.top-exp-name{font-size:15px;font-weight:600}
-.top-exp-date{font-size:12px;color:var(--muted)}
+.top-exp-name{font-size:15px;font-weight:700;letter-spacing:-0.2px}
+.top-exp-date{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
 .top-exp-amt{font-size:16px;font-weight:700;color:var(--red)}
 
 .ytd-header{text-align:center;margin:24px 24px 16px;display:flex;flex-direction:column;gap:4px}
@@ -195,7 +263,7 @@ textarea.soft-input{resize:none;height:80px}
 .amount-wrap .prefix{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:22px;font-weight:600;color:var(--muted);pointer-events:none}
 .amount-wrap input{padding-left:42px;font-size:26px;font-weight:700;letter-spacing:-0.5px}
 .form-btns{display:flex;gap:10px;padding:12px 24px 4px}
-.submit-btn{flex:1;background:linear-gradient(135deg,var(--blue),var(--blue2));border:none;border-radius:18px;color:white;font-size:17px;font-weight:700;padding:18px;cursor:pointer;box-shadow:0 8px 20px rgba(219,39,119,0.3);transition:transform 0.1s;position:relative;overflow:hidden}
+.submit-btn{flex:1;background:linear-gradient(135deg,var(--blue),var(--blue2));border:none;border-radius:18px;color:white;font-size:17px;font-weight:700;padding:18px;cursor:pointer;box-shadow:0 8px 20px rgba(0,122,255,0.3);transition:transform 0.1s;position:relative;overflow:hidden}
 .submit-btn:active{transform:scale(0.96)}
 .submit-btn:disabled{opacity:0.5}
 .submit-btn .btn-text{transition:opacity 0.2s}
@@ -261,12 +329,16 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
     <div class="header-top">
       <div class="header-greeting">
         <div class="time-label" id="timeLabel">Good morning</div>
-        <h1>Sierra 👋</h1>
+        <h1>Cameron 👋</h1>
       </div>
       <div class="header-actions">
         <button class="sync-btn" onclick="triggerHaptic();reloadDashboard(this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 1 0 2.13-5.87L21 8"/></svg>
-          <span class="sync-btn-label">Sync</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="23 4 23 10 17 10"></polyline>
+<polyline points="1 20 1 14 7 14"></polyline>
+<path d="M3.51 9a9 9 0 0114.13-3.36L23 10"></path>
+<path d="M20.49 15a9 9 0 01-14.13 3.36L1 14"></path>
+</svg>
           <span class="sync-time" id="syncTime"></span>
         </button>
         <button class="month-selector" onclick="triggerHaptic();openMonthModal()">
@@ -276,9 +348,18 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
       </div>
     </div>
     <div class="month-summary">
-      <div class="summary-pill"><div class="s-label">Income</div><div class="s-amount green" id="summaryIncome">—</div></div>
-      <div class="summary-pill"><div class="s-label">Expenses</div><div class="s-amount red" id="summaryExpense">—</div></div>
-      <div class="summary-pill"><div class="s-label">Net</div><div class="s-amount" id="summaryNet">—</div></div>
+      <div class="summary-pill" id="summary-pill-income" onclick="triggerHaptic();setFilter('income')">
+        <div class="s-label">Income</div>
+        <div class="s-amount green" id="summaryIncome">—</div>
+      </div>
+      <div class="summary-pill" id="summary-pill-expense" onclick="triggerHaptic();setFilter('expense')">
+        <div class="s-label">Expenses</div>
+        <div class="s-amount red" id="summaryExpense">—</div>
+      </div>
+      <div class="summary-pill" id="summary-pill-all" onclick="triggerHaptic();setFilter('all')">
+        <div class="s-label">Net</div>
+        <div class="s-amount" id="summaryNet">—</div>
+      </div>
     </div>
   </div>
 
@@ -287,13 +368,6 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
       <div class="search-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg></div>
       <input class="search-input" type="text" id="searchInput" placeholder="Search transactions..." oninput="filterTransactions()" autocomplete="off">
     </div>
-  </div>
-
-  <div class="filter-pills">
-    <button class="filter-pill active" id="filter-all" onclick="triggerHaptic();setFilter('all')">All</button>
-    <button class="filter-pill" id="filter-income" onclick="triggerHaptic();setFilter('income')">Income</button>
-    <button class="filter-pill" id="filter-expense" onclick="triggerHaptic();setFilter('expense')">Expenses</button>
-    <button class="filter-pill" id="filter-transfer" onclick="triggerHaptic();setFilter('transfer')">Transfers</button>
   </div>
 
   <div class="accounts-scroll" id="accountsScroll">
@@ -322,7 +396,13 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
     </div>
   </div>
 
-  <div class="insights-top-card">
+  
+<div class="comparison-card" id="comparisonCard">
+  <div class="comparison-label">Monthly Comparison</div>
+  <div class="comparison-text" id="comparisonText">Loading comparison...</div>
+</div>
+
+<div class="insights-top-card">
     <div class="donut-svg-wrap">
       <svg id="donutSvg" viewBox="0 0 180 180"><circle cx="90" cy="90" r="70" fill="none" stroke="var(--border)" stroke-width="36"/></svg>
       <div class="donut-hole-text">
@@ -373,7 +453,8 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
         <label>Account</label>
         <select id="account" class="soft-input">
           <option value="">Select account...</option>
-          <option>Savings</option><option>Checking</option><option>Car</option><option>Phone</option><option>Gas</option><option>Credit Card</option>
+          <option>Checking</option><option>HYSA</option><option>Discover CC</option>
+          <option>Emergency</option><option>Venmo</option><option>Apple Cash</option><option>Cash Stash</option>
         </select>
       </div>
       <div class="field"><label>Transaction</label><input type="text" id="transaction" class="soft-input" placeholder="e.g. Uber, Target, Costco" autocomplete="off"/></div>
@@ -447,7 +528,8 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
       <div class="field">
         <label>Account</label>
         <select id="editAccount" class="soft-input">
-          <option>Savings</option><option>Checking</option><option>Car</option><option>Phone</option><option>Gas</option><option>Credit Card</option>
+          <option>Checking</option><option>HYSA</option><option>Discover CC</option>
+          <option>Emergency</option><option>Venmo</option><option>Apple Cash</option><option>Cash Stash</option>
         </select>
       </div>
       <div class="field"><label>Transaction</label><input type="text" id="editTransaction" class="soft-input" autocomplete="off"/></div>
@@ -483,14 +565,14 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
 <div class="toast" id="toast"></div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbwHTrbRXKwTVAxCuelsalTPyzGrlWMHym04eC3A_bB7VioVdvwkcu_ZMGlygW5bicCtmA/exec";
+const API = "https://script.google.com/macros/s/AKfycbzpUcK9bkimBFxGG388uz0Uh5jQ7KMyMmzKxvUkKguOHkEYL582oUdhOFTUQ5lLXAuR/exec";
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-const ACCT_COLORS = {"Savings":"#db2777","Checking":"#f43f5e","Car":"#06b6d4","Phone":"#10b981","Gas":"#f59e0b","Credit Card":"#4c0519"};
-const ACCT_ICONS = {"Savings":"💰","Checking":"🏦","Car":"🚗","Phone":"📱","Gas":"⛽","Credit Card":"💳"};
-const ACCT_CLASS = {"Savings":"savings","Checking":"checking","Car":"car","Phone":"phone","Gas":"gas","Credit Card":"creditcard"};
+const ACCT_COLORS = {"Checking":"#007aff","HYSA":"#34c759","Discover CC":"#ff3b30","Emergency":"#af52de","Venmo":"#32ade6","Apple Cash":"#8e8e93","Cash Stash":"#ff9500"};
+const ACCT_ICONS = {"Checking":"🏦","HYSA":"💰","Discover CC":"💳","Emergency":"🚨","Venmo":"📱","Apple Cash":"🍎","Cash Stash":"💵"};
+const ACCT_CLASS = {"Checking":"checking","HYSA":"hysa","Discover CC":"discover","Emergency":"emergency","Venmo":"venmo","Apple Cash":"apple","Cash Stash":"cash"};
 const CAT_COLORS = {
   'Transit & Rideshare':'#af52de','Online Shopping':'#ff2d55','Groceries':'#34c759',
-  'Food & Dining':'#ff9500','Coffee & Drinks':'#ff3b30','Subscriptions':'#db2777',
+  'Food & Dining':'#ff9500','Coffee & Drinks':'#ff3b30','Subscriptions':'#007aff',
   'Gas':'#ffcc00','Education':'#5ac8fa','Travel':'#5856d6','Fitness':'#30d158','General Expenses':'#8e8e93'
 };
 
@@ -591,11 +673,13 @@ function reloadDashboard(btnNode){
 }
 
 function renderDashboard(data){
-  // Summary — exclude transfers from expense total
+  // Summary — exclude transfers from BOTH income + expense totals
   let inc=0,exp=0;
   (data.transactions||[]).forEach(tx=>{
-    inc+=getVal(tx.income);
-    if(!isTransfer(tx))exp+=getVal(tx.expense);
+    if(!isTransfer(tx)){
+      inc+=getVal(tx.income);
+      exp+=getVal(tx.expense);
+    }
   });
   const net=inc-exp;
   document.getElementById('summaryIncome').textContent='+$'+fmt(inc);
@@ -630,9 +714,21 @@ function renderDashboard(data){
 }
 
 function setFilter(f){
-  currentFilter=f;
-  document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
-  document.getElementById('filter-'+f).classList.add('active');
+
+  if(currentFilter===f && f!=='all'){
+    currentFilter='all';
+  }else{
+    currentFilter=f;
+  }
+
+  document.querySelectorAll('.summary-pill').forEach(p=>p.classList.remove('active-filter'));
+
+  if(currentFilter==='income'){
+    document.getElementById('summary-pill-income').classList.add('active-filter');
+  }else if(currentFilter==='expense'){
+    document.getElementById('summary-pill-expense').classList.add('active-filter');
+  }
+
   filterTransactions();
 }
 
@@ -763,8 +859,20 @@ function renderInsights(data){
   // Biggest purchases — transfers excluded
   const top5=topList.sort((a,b)=>b._exp-a._exp).slice(0,5);
   document.getElementById('topExpensesList').innerHTML=top5.length
-    ?top5.map(tx=>`<div class="top-expense-row"><div class="top-exp-left"><div class="top-exp-icon">${tx._emoji}</div><div><div class="top-exp-name">${tx.transaction}</div><div class="top-exp-date">${fmtDate(tx.date)}${tx.note?' · '+tx.note:''}</div></div></div><div class="top-exp-amt">-$${fmt(tx._exp)}</div></div>`).join('')
-    :'<div style="text-align:center;font-size:13px;color:var(--muted);padding:10px">No purchases logged yet.</div>';
+    ?top5.map(tx=>`<div class="top-expense-row">
+      <div class="top-exp-left">
+        <div class="top-exp-icon">${tx._emoji}</div>
+        <div>
+          <div class="top-exp-name">${tx.transaction}</div>
+          <div class="top-exp-date">
+${tx.note ? tx.note+' • ' : ''}${fmtDate(tx.date)}
+${tx.account ? ' • '+tx.account : ''}
+</div>
+        </div>
+      </div>
+      <div class="top-exp-amt">-$${fmt(tx._exp)}</div>
+    </div>`).join('')
+    :'<div style="text-align:center;font-size:13px;color:var(--muted);padding:10px">No purchases this month yet.</div>';
 
   if(!yearlyDataLoaded)fetchYearlyData();
 }
@@ -841,7 +949,7 @@ function openEditFromSheet(){
   editingIdx=selectedTxIdx;
   const tx=cachedData.transactions[editingIdx];
   document.getElementById('editDate').value=toInputDate(tx.date);
-  document.getElementById('editAccount').value=tx.account||'Savings';
+  document.getElementById('editAccount').value=tx.account||'Checking';
   document.getElementById('editTransaction').value=tx.transaction||'';
   document.getElementById('editNote').value=tx.note||'';
   const isExp=getVal(tx.expense)>0;
@@ -929,6 +1037,53 @@ function showToast(msg,type){
 }
 
 loadDashboard();
+
+document.addEventListener('DOMContentLoaded',()=>{
+  setFilter('all');
+});
+
+
+function updateMonthlyComparison(){
+  const comparison=document.getElementById('comparisonText');
+  if(!comparison)return;
+
+  const currentMonth=currentMonthIndex;
+  const prevMonth=currentMonth-1;
+
+  if(prevMonth<0){
+    comparison.innerHTML='Not enough data yet to compare spending trends.';
+    return;
+  }
+
+  const txs=(data.transactions||[]);
+
+  const currentTotal=txs
+    .filter(tx=>!isTransfer(tx))
+    .filter(tx=>new Date(tx.date).getMonth()===currentMonth)
+    .reduce((sum,tx)=>sum+getVal(tx.expense),0);
+
+  const prevTotal=txs
+    .filter(tx=>!isTransfer(tx))
+    .filter(tx=>new Date(tx.date).getMonth()===prevMonth)
+    .reduce((sum,tx)=>sum+getVal(tx.expense),0);
+
+  if(prevTotal===0){
+    comparison.innerHTML='Not enough data yet to compare spending trends.';
+    return;
+  }
+
+  const diff=currentTotal-prevTotal;
+  const percent=Math.abs((diff/prevTotal)*100).toFixed(0);
+
+  if(diff<0){
+    comparison.innerHTML=`You spent ${percent}% less than last month.`;
+  }else if(diff>0){
+    comparison.innerHTML=`You spent ${percent}% more than last month.`;
+  }else{
+    comparison.innerHTML='Your spending was the same as last month.';
+  }
+}
+
 </script>
 </body>
 </html>
