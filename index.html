@@ -241,6 +241,18 @@ textarea.soft-input{resize:none;height:80px}
 .action-btn.cancel{color:var(--muted);background:transparent}
 .action-btn svg{width:22px;height:22px;flex-shrink:0}
 
+/* EDIT OVERLAY */
+.edit-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.edit-overlay.open{display:flex}
+.edit-sheet{background:var(--card);border-radius:28px 28px 0 0;padding:20px 24px max(env(safe-area-inset-bottom,24px),24px);width:100%;max-width:430px;animation:slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1);max-height:92dvh;overflow-y:auto;box-shadow:0 -10px 40px rgba(0,0,0,0.15)}
+.edit-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:20px;text-align:center}
+.edit-btns{display:flex;gap:10px;margin-top:16px}
+.edit-save{flex:1;background:linear-gradient(135deg,var(--blue),var(--blue2));border:none;border-radius:16px;color:white;font-size:16px;font-weight:700;padding:16px;cursor:pointer}
+.edit-cancel-btn{background:var(--input-bg);border:1px solid var(--border);border-radius:16px;color:var(--muted);font-size:15px;font-weight:700;padding:16px 20px;cursor:pointer}
+
+/* CATEGORY BREAKDOWN SHEET */
+.cat-sheet{background:var(--card);border-radius:28px 28px 0 0;padding:20px 0 max(env(safe-area-inset-bottom,24px),24px);width:100%;max-width:430px;animation:slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1);max-height:85dvh;overflow-y:auto;box-shadow:0 -10px 40px rgba(0,0,0,0.15)}
+
 /* SUCCESS + TOAST */
 .success-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .success-overlay.show{display:flex}
@@ -521,7 +533,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
 
 <!-- CATEGORY BREAKDOWN SHEET -->
 <div class="modal-overlay" id="catBreakdownModal" onclick="closeModals(event)">
-  <div class="bottom-sheet" onclick="event.stopPropagation()" style="max-height:85dvh;overflow-y:auto;padding-bottom:max(env(safe-area-inset-bottom,24px),24px)">
+  <div class="cat-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div style="padding:0 24px 16px;display:flex;align-items:center;gap:14px">
       <div id="catBreakIcon" style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0"></div>
@@ -580,7 +592,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
 <div class="toast" id="toast"></div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbwHTrbRXKwTVAxCuelsalTPyzGrlWMHym04eC3A_bB7VioVdvwkcu_ZMGlygW5bicCtmA/exec";
+const API = "https://script.google.com/macros/s/AKfycbzBugu7xqpDSqPxHW_kVjcKw7CZJYO3c3HStGUP0x5pot-B5qSrtJOdMtMoIsoAX21GUQ/exec";
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const ACCT_COLORS = {"Savings":"#db2777","Checking":"#f43f5e","Car":"#06b6d4","Phone":"#10b981","Gas":"#f59e0b","Credit Card":"#4c0519"};
 const ACCT_ICONS = {"Savings":"💰","Checking":"🏦","Car":"🚗","Phone":"📱","Gas":"⛽","Credit Card":"💳"};
@@ -588,7 +600,7 @@ const ACCT_CLASS = {"Savings":"savings","Checking":"checking","Car":"car","Phone
 const CAT_COLORS = {
   'Transit & Rideshare':'#af52de','Online Shopping':'#ff2d55','Groceries':'#34c759',
   'Food & Dining':'#ff9500','Coffee & Drinks':'#ff3b30','Subscriptions':'#007aff',
-  'Gas':'#ffcc00','Education':'#5ac8fa','Travel':'#5856d6','Fitness':'#30d158','General Expenses':'#8e8e93'
+  'Gas':'#ffcc00','Education':'#5ac8fa','Travel':'#5856d6','Fitness':'#30d158','Personal Care':'#ec4899','General Expenses':'#8e8e93'
 };
 
 let currentMonth = MONTHS[new Date().getMonth()];
@@ -797,7 +809,6 @@ function renderTransactions(txs){
   txs.forEach(tx=>{
     const origIdx=cachedData.transactions.indexOf(tx);
     const key=String(tx.date||'Unknown');
-    if(!groups[key])groups[key Broadway]=[];
     if(!groups[key])groups[key]=[];
     groups[key].push({...tx,_idx:origIdx});
   });
