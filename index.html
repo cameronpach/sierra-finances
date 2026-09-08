@@ -33,7 +33,7 @@ body {
   background:var(--bg); color:var(--text);
   font-family:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   min-height:100dvh; overflow-x:hidden; font-size:15px;
-  overscroll-behavior-y: contain;
+  overscroll-behavior-y: contain; /* Custom pull-to-refresh */
 }
 
 input, select, textarea, button { font-family: inherit; }
@@ -56,7 +56,7 @@ input, select, textarea, button { font-family: inherit; }
 
 /* PULL TO REFRESH */
 .ptr-container { height: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; transition: height 0.2s ease; background: var(--navy); }
-.ptr-spinner { width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+.ptr-spinner { width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spinSync 0.8s linear infinite; }
 
 /* HEADERS */
 .page-header{background:linear-gradient(160deg,#831843 0%,#be185d 100%);padding:max(env(safe-area-inset-top,20px),20px) 24px 24px;position:relative;overflow:hidden}
@@ -74,20 +74,16 @@ input, select, textarea, button { font-family: inherit; }
 .sync-btn.spinning svg{animation:spin 1s linear infinite}
 .sync-btn-label{font-size:12px;font-weight:700;color:white;letter-spacing:0.2px}
 .sync-time{font-size:10px;color:rgba(255,255,255,0.6);font-weight:600}
-
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes donutFadeIn{from{opacity:0;transform:scale(0.88)}to{opacity:1;transform:scale(1)}}
 
 .month-summary{display:flex;gap:8px;position:relative;z-index:1}
-.summary-pill{flex:1;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:12px;cursor:pointer;transition:all 0.2s}
-.summary-pill:active{transform:scale(0.96)}
-.summary-pill.active-filter{background:rgba(255,255,255,0.25);border-color:rgba(255,255,255,0.4);transform:scale(1.02)}
+.summary-pill{flex:1;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:12px}
 .summary-pill .s-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:4px}
 .summary-pill .s-amount{font-size:16px;font-weight:800;color:white;letter-spacing:-0.3px}
 .summary-pill .s-amount.green{color:#30d158}
 .summary-pill .s-amount.red{color:#ff453a}
 
-/* SEARCH & FILTERS */
+/* SEARCH — FIXED FLEXBOX LAYOUT */
 .search-wrap{padding:16px 24px 0}
 .search-inner{display:flex;align-items:center;background:var(--input-bg);border:1px solid transparent;border-radius:14px;transition:all 0.2s;overflow:hidden}
 .search-inner:focus-within{border-color:var(--blue);background:var(--card);box-shadow:0 0 0 3px var(--blue-light)}
@@ -101,14 +97,14 @@ input, select, textarea, button { font-family: inherit; }
 .filter-pill{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0}
 .filter-pill.active{background:var(--navy);color:white;border-color:var(--navy)}
 
-/* ACCOUNTS (FIXED UNIFORM WIDTH) */
+/* ACCOUNTS */
 .accounts-scroll{display:flex;gap:12px;overflow-x:auto;padding:16px 24px 4px;scrollbar-width:none}
 .accounts-scroll::-webkit-scrollbar{display:none}
 .section{padding:16px 24px 0}
 .section-title{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
 .section-divider{height:1px;background:var(--border);margin:16px 24px 0}
 
-.account-card{width:148px;min-width:148px;max-width:148px;background:var(--card);border-radius:20px;padding:16px;box-shadow:var(--shadow);flex-shrink:0;transition:transform 0.15s;user-select:none;-webkit-user-select:none}
+.account-card{min-width:145px;background:var(--card);border-radius:20px;padding:16px;box-shadow:var(--shadow);flex-shrink:0;transition:transform 0.15s}
 .account-card:active{transform:scale(0.92)}
 .account-card.savings{border-top:3px solid #db2777}
 .account-card.checking{border-top:3px solid #f43f5e}
@@ -116,9 +112,8 @@ input, select, textarea, button { font-family: inherit; }
 .account-card.phone{border-top:3px solid #10b981}
 .account-card.gas{border-top:3px solid #f59e0b}
 .account-card.creditcard{border-top:3px solid #881337}
-
 .account-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:16px}
-.account-name{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:0.5px;margin-bottom:5px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.account-name{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:0.5px;margin-bottom:5px;text-transform:uppercase}
 .account-balance{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.5px}
 .account-balance.negative{color:var(--red)}
 .account-tx-count{font-size:11px;font-weight:600;color:var(--muted);margin-top:4px}
@@ -157,7 +152,7 @@ input, select, textarea, button { font-family: inherit; }
 
 /* INSIGHTS */
 .insights-top-card{background:var(--card);border-radius:24px;padding:24px;margin:16px 24px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center}
-.donut-svg-wrap{position:relative;width:180px;height:180px;margin-bottom:24px;display:flex;align-items:center;justify-content:center;animation:donutFadeIn 0.4s ease}
+.donut-svg-wrap{position:relative;width:180px;height:180px;margin-bottom:24px;display:flex;align-items:center;justify-content:center}
 .donut-svg-wrap svg{position:absolute;top:0;left:0;width:180px;height:180px;transform:rotate(-90deg)}
 .donut-hole-text{display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1}
 .donut-total-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}
@@ -241,18 +236,6 @@ textarea.soft-input{resize:none;height:80px}
 .action-btn.cancel{color:var(--muted);background:transparent}
 .action-btn svg{width:22px;height:22px;flex-shrink:0}
 
-/* EDIT OVERLAY */
-.edit-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
-.edit-overlay.open{display:flex}
-.edit-sheet{background:var(--card);border-radius:28px 28px 0 0;padding:20px 24px max(env(safe-area-inset-bottom,24px),24px);width:100%;max-width:430px;animation:slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1);max-height:92dvh;overflow-y:auto;box-shadow:0 -10px 40px rgba(0,0,0,0.15)}
-.edit-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:20px;text-align:center}
-.edit-btns{display:flex;gap:10px;margin-top:16px}
-.edit-save{flex:1;background:linear-gradient(135deg,var(--blue),var(--blue2));border:none;border-radius:16px;color:white;font-size:16px;font-weight:700;padding:16px;cursor:pointer}
-.edit-cancel-btn{background:var(--input-bg);border:1px solid var(--border);border-radius:16px;color:var(--muted);font-size:15px;font-weight:700;padding:16px 20px;cursor:pointer}
-
-/* CATEGORY BREAKDOWN SHEET */
-.cat-sheet{background:var(--card);border-radius:28px 28px 0 0;padding:20px 0 max(env(safe-area-inset-bottom,24px),24px);width:100%;max-width:430px;animation:slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1);max-height:85dvh;overflow-y:auto;box-shadow:0 -10px 40px rgba(0,0,0,0.15)}
-
 /* SUCCESS + TOAST */
 .success-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .success-overlay.show{display:flex}
@@ -295,18 +278,9 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
       </div>
     </div>
     <div class="month-summary">
-      <div class="summary-pill" id="summary-pill-income" onclick="triggerHaptic();setFilter('income')">
-        <div class="s-label">Income</div>
-        <div class="s-amount green" id="summaryIncome">—</div>
-      </div>
-      <div class="summary-pill" id="summary-pill-expense" onclick="triggerHaptic();setFilter('expense')">
-        <div class="s-label">Expenses</div>
-        <div class="s-amount red" id="summaryExpense">—</div>
-      </div>
-      <div class="summary-pill" id="summary-pill-all" onclick="triggerHaptic();setFilter('all')">
-        <div class="s-label">Net</div>
-        <div class="s-amount" id="summaryNet">—</div>
-      </div>
+      <div class="summary-pill"><div class="s-label">Income</div><div class="s-amount green" id="summaryIncome">—</div></div>
+      <div class="summary-pill"><div class="s-label">Expenses</div><div class="s-amount red" id="summaryExpense">—</div></div>
+      <div class="summary-pill"><div class="s-label">Net</div><div class="s-amount" id="summaryNet">—</div></div>
     </div>
   </div>
 
@@ -449,13 +423,13 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
         <label>Amount</label>
         <div class="amount-wrap"><span class="prefix">$</span><input type="number" id="amount" class="soft-input" placeholder="0.00" step="0.01" min="0" inputmode="decimal" style="padding-left:42px"/></div>
       </div>
-    </div>
-    <div class="form-btns">
-      <button class="submit-btn" id="submitBtn" onclick="triggerHaptic();submitTransaction()">
-        <span class="btn-text">Log Transaction</span>
-        <span class="spinner"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke-linecap="round"/></svg></span>
-      </button>
-      <button class="clear-btn" onclick="triggerHaptic();clearForm()">Clear</button>
+      <div class="form-btns">
+        <button class="submit-btn" id="submitBtn" onclick="triggerHaptic();submitTransaction()">
+          <span class="btn-text">Log Transaction</span>
+          <span class="spinner"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke-linecap="round"/></svg></span>
+        </button>
+        <button class="clear-btn" onclick="triggerHaptic();clearForm()">Clear</button>
+      </div>
     </div>
   </div>
 </div>
@@ -533,7 +507,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
 
 <!-- CATEGORY BREAKDOWN SHEET -->
 <div class="modal-overlay" id="catBreakdownModal" onclick="closeModals(event)">
-  <div class="cat-sheet" onclick="event.stopPropagation()">
+  <div class="bottom-sheet" onclick="event.stopPropagation()" style="max-height:85dvh;overflow-y:auto;padding-bottom:max(env(safe-area-inset-bottom,24px),24px)">
     <div class="modal-handle"></div>
     <div style="padding:0 24px 16px;display:flex;align-items:center;gap:14px">
       <div id="catBreakIcon" style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0"></div>
@@ -573,17 +547,6 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
   </div>
 </div>
 
-<!-- COPY MONTH MODAL -->
-<div class="modal-overlay" id="copyMonthModal" onclick="event.stopPropagation()">
-  <div class="bottom-sheet" onclick="event.stopPropagation()" style="padding:28px 24px max(env(safe-area-inset-bottom,28px),28px)">
-    <div style="font-size:32px;text-align:center;margin-bottom:12px">📅</div>
-    <div style="font-size:20px;font-weight:800;color:var(--text);text-align:center;margin-bottom:8px" id="copyMonthTitle">New Month!</div>
-    <div style="font-size:14px;font-weight:500;color:var(--muted);text-align:center;line-height:1.6;margin-bottom:24px" id="copyMonthDesc">Copy last month's closing balances as this month's starting balances?</div>
-    <button onclick="triggerHaptic();confirmCopyMonth()" style="width:100%;background:linear-gradient(135deg,var(--blue),var(--blue2));border:none;border-radius:16px;color:white;font-size:16px;font-weight:800;padding:18px;cursor:pointer;margin-bottom:10px">Yes, Copy Balances</button>
-    <button onclick="triggerHaptic();document.getElementById('copyMonthModal').classList.remove('open')" style="width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:16px;color:var(--muted);font-size:15px;font-weight:700;padding:16px;cursor:pointer">Not Yet</button>
-  </div>
-</div>
-
 <!-- SUCCESS -->
 <div class="success-overlay" id="successOverlay">
   <div class="success-circle"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -592,7 +555,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
 <div class="toast" id="toast"></div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbzBugu7xqpDSqPxHW_kVjcKw7CZJYO3c3HStGUP0x5pot-B5qSrtJOdMtMoIsoAX21GUQ/exec";
+const API = "https://script.google.com/macros/s/AKfycbwHTrbRXKwTVAxCuelsalTPyzGrlWMHym04eC3A_bB7VioVdvwkcu_ZMGlygW5bicCtmA/exec";
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const ACCT_COLORS = {"Savings":"#db2777","Checking":"#f43f5e","Car":"#06b6d4","Phone":"#10b981","Gas":"#f59e0b","Credit Card":"#4c0519"};
 const ACCT_ICONS = {"Savings":"💰","Checking":"🏦","Car":"🚗","Phone":"📱","Gas":"⛽","Credit Card":"💳"};
@@ -600,7 +563,7 @@ const ACCT_CLASS = {"Savings":"savings","Checking":"checking","Car":"car","Phone
 const CAT_COLORS = {
   'Transit & Rideshare':'#af52de','Online Shopping':'#ff2d55','Groceries':'#34c759',
   'Food & Dining':'#ff9500','Coffee & Drinks':'#ff3b30','Subscriptions':'#007aff',
-  'Gas':'#ffcc00','Education':'#5ac8fa','Travel':'#5856d6','Fitness':'#30d158','Personal Care':'#ec4899','General Expenses':'#8e8e93'
+  'Gas':'#ffcc00','Education':'#5ac8fa','Travel':'#5856d6','Fitness':'#30d158','General Expenses':'#8e8e93'
 };
 
 let currentMonth = MONTHS[new Date().getMonth()];
@@ -608,6 +571,7 @@ let txType='expense', editTxType='expense';
 let cachedData=null, editingIdx=null, selectedTxIdx=null;
 let yearlyDataLoaded=false, currentFilter='all';
 
+// Timezone-safe today
 const _t = new Date();
 const localISODate = `${_t.getFullYear()}-${String(_t.getMonth()+1).padStart(2,'0')}-${String(_t.getDate()).padStart(2,'0')}`;
 
@@ -629,7 +593,7 @@ document.getElementById('insightsMonthLabel').textContent='Overview for '+curren
 document.getElementById('date').value=localISODate;
 updateLogLabel();
 const lastAcct=localStorage.getItem('lastAccount');
-if(lastAcct && lastAcct !== 'College') document.getElementById('account').value=lastAcct;
+if(lastAcct)document.getElementById('account').value=lastAcct;
 
 function isTransfer(tx){
   return ((tx.transaction||'').toLowerCase().includes('transfer'))||((tx.note||'').toLowerCase().includes('transfer'));
@@ -682,7 +646,6 @@ async function loadDashboard(){
     renderDashboard(data);
     updateSyncTime();
     if(document.getElementById('page-insights').classList.contains('active'))renderInsights(data);
-    checkNewMonth();
   }catch(e){showToast('Network error','error');}
 }
 
@@ -700,9 +663,10 @@ function reloadDashboard(btnNode){
 }
 
 function renderDashboard(data){
+  // Summary — exclude transfers from BOTH income + expense totals
   let inc=0,exp=0;
   (data.transactions||[]).forEach(tx=>{
-    if(!isTransfer(tx) && tx.account !== 'College'){
+    if(!isTransfer(tx)){
       inc+=getVal(tx.income);
       exp+=getVal(tx.expense);
     }
@@ -714,73 +678,47 @@ function renderDashboard(data){
   netEl.textContent=(net>=0?'+':'-')+'$'+fmt(Math.abs(net));
   netEl.className='s-amount '+(net>=0?'green':'red');
 
+  // Account cards with change vs starting balance
   const txCount={};
   const acctChange={};
   (data.transactions||[]).forEach(tx=>{
-    if(tx.account === 'College') return;
     txCount[tx.account]=(txCount[tx.account]||0)+1;
     const chg=getVal(tx.income)-getVal(tx.expense);
     acctChange[tx.account]=(acctChange[tx.account]||0)+chg;
   });
 
-  const activeAccounts = (data.currentBalances||[]).filter(a=>a.account !== 'College');
-  document.getElementById('accountsScroll').innerHTML=activeAccounts.map(a=>{
+  document.getElementById('accountsScroll').innerHTML=(data.currentBalances||[]).map(a=>{
     const val=getVal(a.balance),isNeg=val<0,cnt=txCount[a.account]||0;
     const chg=acctChange[a.account]||0;
     const chgHtml=chg!==0?`<div class="account-change ${chg>0?'pos':'neg'}">${chg>0?'▲':'▼'} $${fmt(Math.abs(chg))} this month</div>`:'';
-    const isCC = a.account === 'Credit Card' || a.account === 'Discover CC';
-    
-    // Hide "You owe this" if balance is 0 or positive
+    const isCC = a.account === 'Discover CC' || a.account === 'Credit Card';
     const balDisplay = isCC
-      ? `<div class="account-balance ${val > 0.005 ? 'negative' : ''}">$${fmt(Math.abs(val))}</div>${val > 0.005 ? '<div style="font-size:10px;font-weight:800;color:var(--red);letter-spacing:0.3px;margin-top:2px;text-transform:uppercase">You owe this</div>' : ''}`
+      ? `<div class="account-balance negative">$${fmt(Math.abs(val))}</div><div style="font-size:10px;font-weight:800;color:var(--red);letter-spacing:0.3px;margin-top:2px;text-transform:uppercase">You owe this</div>`
       : `<div class="account-balance ${isNeg?'negative':''}">$${fmt(Math.abs(val))}</div>`;
-
-    const countDisplay = cnt === 0 ? 'No activity' : `${cnt} transaction${cnt!==1?'s':''}`;
-
     return `<div class="account-card ${ACCT_CLASS[a.account]||''}" onclick="triggerHaptic();openAccountDetail('${a.account}')">
-      <div class="account-icon" style="background:${ACCT_COLORS[a.account]||'#db2777'}22">${accountEmoji(a.account)}</div>
+      <div class="account-icon" style="background:${ACCT_COLORS[a.account]}22">${accountEmoji(a.account)}</div>
       <div class="account-name">${a.account}</div>
       ${balDisplay}
-      <div class="account-tx-count">${countDisplay}</div>
+      <div class="account-tx-count">${cnt} transaction${cnt!==1?'s':''}</div>
       ${chgHtml}
     </div>`;
   }).join('');
 
   filterTransactions();
-
-  if(!window._balAnimated){
-    window._balAnimated=true;
-    setTimeout(()=>{
-      document.querySelectorAll('.account-balance').forEach(el=>{
-        const txt=el.textContent.replace(/[$,]/g,'');
-        const num=parseFloat(txt)||0;
-        if(num>0)animateCount(el,num);
-      });
-    },50);
-  }
+  // Animate account balance numbers
+  setTimeout(()=>{
+    document.querySelectorAll('.account-balance').forEach(el=>{
+      const txt=el.textContent.replace(/[$,]/g,'');
+      const num=parseFloat(txt)||0;
+      if(num>0)animateCount(el,num);
+    });
+  },50);
 }
 
 function setFilter(f){
-  if(currentFilter===f && f!=='all'){
-    currentFilter='all';
-  }else{
-    currentFilter=f;
-  }
-
-  document.querySelectorAll('.summary-pill, .filter-pill').forEach(p=>p.classList.remove('active-filter', 'active'));
-
-  if(currentFilter==='income'){
-    document.getElementById('summary-pill-income').classList.add('active-filter');
-    document.getElementById('filter-income').classList.add('active');
-  }else if(currentFilter==='expense'){
-    document.getElementById('summary-pill-expense').classList.add('active-filter');
-    document.getElementById('filter-expense').classList.add('active');
-  }else if(currentFilter==='transfer'){
-    document.getElementById('filter-transfer').classList.add('active');
-  }else{
-    document.getElementById('filter-all').classList.add('active');
-  }
-
+  currentFilter=f;
+  document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
+  document.getElementById('filter-'+f).classList.add('active');
   filterTransactions();
 }
 
@@ -788,7 +726,6 @@ function filterTransactions(){
   if(!cachedData)return;
   const q=document.getElementById('searchInput').value.toLowerCase().trim();
   let filtered=(cachedData.transactions||[]).filter(tx=>{
-    if(tx.account === 'College') return false;
     const matchText=!q||(tx.transaction||'').toLowerCase().includes(q)||(tx.note||'').toLowerCase().includes(q)||(tx.account||'').toLowerCase().includes(q);
     let matchPill=true;
     if(currentFilter==='income')matchPill=getVal(tx.income)>0;
@@ -826,7 +763,7 @@ function renderTransactions(txs){
         return `<div class="tx-item" onclick="triggerHaptic();openTxSheet(${tx._idx})">
           <div class="tx-icon ${iconClass}">${getEmoji(tx.transaction)}</div>
           <div class="tx-info">
-            <div class="tx-name" style="display:flex;align-items:center;gap:6px">${tx.transaction||'—'}${isTr?'<span style="font-size:10px;font-weight:800;background:var(--blue-light);color:var(--blue);border-radius:4px;padding:1px 5px;flex-shrink:0">⇄</span>':''}</div>
+            <div class="tx-name">${tx.transaction||'—'}</div>
             ${tx.note?`<div class="tx-note">${tx.note}</div>`:''}
             <div class="tx-account-tag">${tx.account}</div>
           </div>
@@ -845,8 +782,8 @@ function getEmoji(name){
   if(n.includes('uber')||n.includes('lyft'))return '🚗';
   if(n.includes('amazon'))return '📦';
   if(n.includes('walmart')||n.includes('target')||n.includes('costco')||n.includes('supercenter')||n.includes('dollar tree'))return '🛒';
-  if(n.includes('mcdonald')||n.includes('taco')||n.includes('chipotle')||n.includes('pizza')||n.includes('burger')||n.includes('in-n-out')||n.includes('mexicana')||n.includes('caesar')||n.includes('panda')||n.includes('caeser')||n.includes('sprouts'))return '🍔';
-  if(n.includes('starbucks')||n.includes('coffee')||n.includes('dear coffee'))return '☕';
+  if(n.includes('mcdonald')||n.includes('taco')||n.includes('chipotle')||n.includes('pizza')||n.includes('burger')||n.includes('in-n-out')||n.includes('mexicana')||n.includes('caesar')||n.includes('panda')||n.includes('caeser'))return '🍔';
+  if(n.includes('starbucks')||n.includes('coffee'))return '☕';
   if(n.includes('netflix')||n.includes('hulu')||n.includes('spotify')||n.includes('disney'))return '📺';
   if(n.includes('gas')||n.includes('shell')||n.includes('chevron')||n.includes('arco'))return '⛽';
   if(n.includes('dscout')||n.includes('payout')||n.includes('paycheck')||n.includes('salary'))return '💵';
@@ -857,12 +794,11 @@ function getEmoji(name){
   if(n.includes('gym')||n.includes('fitness'))return '💪';
   if(n.includes('parchment')||n.includes('school')||n.includes('wgu')||n.includes('vvc'))return '🎓';
   if(n.includes('royal')||n.includes('cruise'))return '🚢';
-  if(n.includes('hair')||n.includes('skin room')||n.includes('wax'))return '💅';
   return '💳';
 }
 
 function getCat(emoji){
-  return {'🚗':'Transit & Rideshare','📦':'Online Shopping','🛒':'Groceries','🍔':'Food & Dining','☕':'Coffee & Drinks','📺':'Subscriptions','⛽':'Gas','🎓':'Education','🚢':'Travel','💪':'Fitness','💅':'Personal Care','💳':'General Expenses'}[emoji]||'General Expenses';
+  return {'🚗':'Transit & Rideshare','📦':'Online Shopping','🛒':'Groceries','🍔':'Food & Dining','☕':'Coffee & Drinks','📺':'Subscriptions','⛽':'Gas','🎓':'Education','🚢':'Travel','💪':'Fitness','💳':'General Expenses'}[emoji]||'General Expenses';
 }
 
 function renderInsights(data){
@@ -873,7 +809,7 @@ function renderInsights(data){
   const topList=[];
 
   (data.transactions||[]).forEach(tx=>{
-    if(isTransfer(tx) || tx.account === 'College')return; 
+    if(isTransfer(tx))return; 
     const exp=getVal(tx.expense);
     if(exp>0){
       const emoji=getEmoji(tx.transaction);
@@ -902,7 +838,7 @@ function renderInsights(data){
       const dash=pct*CIRC;
       const color=CAT_COLORS[cat]||'#8e8e93';
       const catSafe=cat.replace(/'/g,"\\'");
-      svgPaths+=`<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${color}" stroke-width="${SW}" stroke-dasharray="${dash} ${CIRC}" stroke-dashoffset="${-offset}" stroke-linecap="butt" style="cursor:pointer;transition:stroke-dasharray 0.5s ease" onclick="triggerHaptic();openCatBreakdown('${catSafe}','${color}')"/>`;
+      svgPaths+=`<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${color}" stroke-width="${SW}" stroke-dasharray="${dash} ${CIRC}" stroke-dashoffset="${-offset}" stroke-linecap="butt" style="cursor:pointer" onclick="triggerHaptic();openCatBreakdown('${catSafe}','${color}')"/>`;
       offset+=dash;
       legendHtml+=`<div class="legend-item" onclick="triggerHaptic();openCatBreakdown('${catSafe}','${color}')"><div class="legend-dot" style="background:${color}"></div>${cat} <span style='color:var(--muted);font-size:11px'>$${fmt(amt)}</span></div>`;
     });
@@ -934,12 +870,14 @@ ${tx.account ? ' • '+tx.account : ''}
 
 async function fetchMonthComparison(){
   const comparison=document.getElementById('comparisonText');
-  const badge=document.getElementById('comparisonBadge');
   if(!comparison)return;
   const idx=MONTHS.indexOf(currentMonth);
-  const isJan=idx===0;
-  const prevMonth=isJan?'December':MONTHS[idx-1];
-  
+  if(idx<=0){
+    comparison.textContent='No previous month data.';
+    document.getElementById('comparisonBadge').textContent='—';
+    return;
+  }
+  const prevMonth=MONTHS[idx-1];
   try{
     let prevData;
     if(prevMonth===currentMonth&&cachedData)prevData=cachedData;
@@ -948,35 +886,29 @@ async function fetchMonthComparison(){
       prevData=await r.json();
     }
     let prevExp=0;
-    (prevData.transactions||[]).forEach(tx=>{if(!isTransfer(tx) && tx.account !== 'College')prevExp+=getVal(tx.expense);});
+    (prevData.transactions||[]).forEach(tx=>{if(!isTransfer(tx))prevExp+=getVal(tx.expense);});
     let curExp=0;
-    (cachedData.transactions||[]).forEach(tx=>{if(!isTransfer(tx) && tx.account !== 'College')curExp+=getVal(tx.expense);});
+    (cachedData.transactions||[]).forEach(tx=>{if(!isTransfer(tx))curExp+=getVal(tx.expense);});
     
-    if(prevExp===0 || isNaN(prevExp)){
-      comparison.textContent='No previous month baseline.';
-      badge.textContent='—';
+    if(prevExp===0){
+      comparison.textContent='No previous month data.';
+      document.getElementById('comparisonBadge').textContent='—';
       return;
     }
     
     const diff=curExp-prevExp;
     const pct=Math.round(Math.abs((diff/prevExp)*100));
-    if(isNaN(pct)){
-      comparison.textContent='Comparison unavailable.';
-      badge.textContent='—';
-    } else if(diff>0){
+    if(diff>0){
       comparison.textContent=`You spent ${pct}% more than last month.`;
-      badge.textContent='📈';
+      document.getElementById('comparisonBadge').textContent='📈';
     } else if(diff<0){
       comparison.textContent=`You spent ${pct}% less than last month.`;
-      badge.textContent='📉';
+      document.getElementById('comparisonBadge').textContent='📉';
     } else {
       comparison.textContent=`Same spending as last month.`;
-      badge.textContent='➡️';
+      document.getElementById('comparisonBadge').textContent='➡️';
     }
-  }catch(e){
-    comparison.textContent='Could not load comparison.';
-    badge.textContent='—';
-  }
+  }catch(e){comparison.textContent='Could not load comparison.';}
 }
 
 async function fetchYearlyData(){
@@ -994,9 +926,8 @@ async function fetchYearlyData(){
       if(res.error||!res.transactions)return;
       let mInc=0,mExp=0;
       res.transactions.forEach(tx=>{
-        if(tx.account === 'College') return;
         mInc+=getVal(tx.income);
-        if(!isTransfer(tx))mExp+=getVal(tx.expense);
+        if(!isTransfer(tx))mExp+=getVal(tx.expense); // EXCLUDE TRANSFERS
       });
       grandTotal+=mExp;
       chartData[i].inc=mInc;chartData[i].exp=mExp;
@@ -1015,7 +946,7 @@ async function fetchYearlyData(){
 // MODALS
 function openLogModal(){clearForm();document.getElementById('logModal').classList.add('open');}
 function closeModals(e){if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('open');}
-function closeTxSheet(){document.getElementById('txActionModal').classList.remove('open');selectedTxIdx=null;}
+function closeTxSheet(){document.getElementById('txActionModal').classList.remove('open');}
 function closeEdit(){document.getElementById('editOverlay').classList.remove('open');editingIdx=null;}
 
 function openMonthModal(){
@@ -1028,7 +959,7 @@ function selectMonth(m){
   ['selectedMonthLabel','insightsSelectorLabel'].forEach(id=>document.getElementById(id).textContent=m);
   document.getElementById('insightsMonthLabel').textContent='Overview for '+m;
   document.getElementById('monthModal').classList.remove('open');
-  cachedData=null;yearlyDataLoaded=false;window._balAnimated=false;reloadDashboard();
+  cachedData=null;yearlyDataLoaded=false;reloadDashboard();
 }
 
 function openTxSheet(idx){
@@ -1125,18 +1056,16 @@ async function submitTransaction(){
       const o=document.getElementById('successOverlay');
       document.getElementById('successText').textContent='Logged!';
       o.classList.add('show');triggerHaptic();
-      
-      // Confetti skips transfers
-      if(txType==='income' && parseFloat(payload.amount)>=25 && !isTransfer({transaction:payload.transaction,note:payload.note})) launchConfetti();
+      if(txType==='income'&&parseFloat(payload.amount)>=25)launchConfetti();
       setTimeout(()=>{o.classList.remove('show');reloadDashboard();},1500);
     }else showToast(json.error||'Something went wrong','error');
   }catch(e){showToast('Network error','error');}
   finally{btn.disabled=false;btn.classList.remove('loading');}
 }
 
-// SAFE CUSTOM EMOJI — No long-press conflict, Sierra key
+// CUSTOM EMOJI — persisted via localStorage
 function accountEmoji(acct){
-  const custom=JSON.parse(localStorage.getItem('acctEmojis_sierra')||'{}');
+  const custom=JSON.parse(localStorage.getItem('acctEmojis')||'{}');
   return custom[acct]||ACCT_ICONS[acct]||'💼';
 }
 
@@ -1145,7 +1074,7 @@ function openAccountDetail(acct){
   const txs=(cachedData.transactions||[]).filter(tx=>tx.account===acct);
   const bal=(cachedData.currentBalances||[]).find(a=>a.account===acct);
   const val=bal?getVal(bal.balance):0;
-  const isCC=acct==='Credit Card' || acct==='Discover CC';
+  const isCC=acct==='Discover CC' || acct==='Credit Card';
   document.getElementById('acctDetailIcon').textContent=accountEmoji(acct);
   document.getElementById('acctDetailIcon').style.background=(ACCT_COLORS[acct]||'#8e8e93')+'22';
   document.getElementById('acctDetailName').textContent=acct;
@@ -1171,6 +1100,32 @@ function openAccountDetail(acct){
   document.getElementById('acctDetailModal').classList.add('open');
 }
 
+// CUSTOM EMOJI PICKER — long press account card
+let pressTimer=null;
+document.addEventListener('touchstart',e=>{
+  const card=e.target.closest('.account-card');
+  if(!card)return;
+  pressTimer=setTimeout(()=>{
+    const acct=card.querySelector('.account-name').textContent;
+    const emojis=['🏦','💰','💳','🚨','📱','🍎','💵','🎯','🏆','⭐','🔥','💎','🌟','🎉','🌴'];
+    const picker=document.createElement('div');
+    picker.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--card);border-radius:20px;padding:20px;z-index:999;box-shadow:0 20px 60px rgba(0,0,0,0.4);width:280px';
+    picker.innerHTML=`<div style="font-size:15px;font-weight:800;text-align:center;margin-bottom:14px;color:var(--text)">Pick icon for ${acct}</div><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${emojis.map(e=>`<button onclick="saveEmoji('${acct}','${e}',this.closest('[style]'))" style="font-size:24px;width:44px;height:44px;border:none;background:var(--input-bg);border-radius:10px;cursor:pointer">${e}</button>`).join('')}</div><button onclick="this.closest('[style]').remove()" style="width:100%;margin-top:14px;background:var(--input-bg);border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;color:var(--muted);cursor:pointer">Cancel</button>`;
+    document.body.appendChild(picker);
+    triggerHaptic();
+  },600);
+},{passive:true});
+document.addEventListener('touchend',()=>{clearTimeout(pressTimer);},{passive:true});
+
+function saveEmoji(acct,emoji,el){
+  const custom=JSON.parse(localStorage.getItem('acctEmojis')||'{}');
+  custom[acct]=emoji;
+  localStorage.setItem('acctEmojis',JSON.stringify(custom));
+  el.remove();
+  if(cachedData)renderDashboard(cachedData);
+  showToast('Icon updated!');
+}
+
 // ANIMATED BALANCE COUNTER
 function animateCount(el, target, prefix='$', duration=800){
   const start=performance.now();
@@ -1188,7 +1143,7 @@ function animateCount(el, target, prefix='$', duration=800){
 
 // CONFETTI
 function launchConfetti(){
-  const colors=['#db2777','#f43f5e','#34c759','#ff9500','#ff3b30','#af52de'];
+  const colors=['#007aff','#34c759','#ff9500','#ff3b30','#af52de','#5ac8fa'];
   for(let i=0;i<80;i++){
     const el=document.createElement('div');
     el.style.cssText=`position:fixed;top:0;left:${Math.random()*100}vw;width:8px;height:8px;border-radius:${Math.random()>0.5?'50%':'2px'};background:${colors[Math.floor(Math.random()*colors.length)]};z-index:9999;pointer-events:none;animation:confettiFall ${1+Math.random()*2}s ease-in forwards;animation-delay:${Math.random()*0.5}s`;
@@ -1207,7 +1162,6 @@ if(!document.getElementById('confettiStyle')){
 function renderNetWorth(data){
   let nw=0;
   (data.currentBalances||[]).forEach(a=>{
-    if(a.account === 'College') return;
     const v=getVal(a.balance);
     if(a.account==='Discover CC' || a.account==='Credit Card')nw-=Math.abs(v);
     else nw+=v;
@@ -1219,16 +1173,19 @@ function renderNetWorth(data){
 function openCatBreakdown(cat, color){
   if(!cachedData)return;
   const txs=(cachedData.transactions||[]).filter(tx=>{
-    if(isTransfer(tx) || tx.account === 'College')return false;
+    if(isTransfer(tx))return false;
     const exp=getVal(tx.expense);
     if(!exp)return false;
     const emoji=getEmoji(tx.transaction);
     return getCat(emoji)===cat;
   });
   const total=txs.reduce((s,tx)=>s+getVal(tx.expense),0);
-  const catEmojiMap = {'Transit & Rideshare':'🚗','Online Shopping':'📦','Groceries':'🛒','Food & Dining':'🍔','Coffee & Drinks':'☕','Subscriptions':'📺','Gas':'⛽','Education':'🎓','Travel':'🚢','Fitness':'💪','Personal Care':'💅','General Expenses':'💳'};
-  const emoji = catEmojiMap[cat] || '💳';
-  
+  const catEmoji=Object.entries({'Transit & Rideshare':'🚗','Online Shopping':'📦','Groceries':'🛒','Food & Dining':'🍔','Coffee & Drinks':'☕','Subscriptions':'📺','Gas':'⛽','Education':'🎓','Travel':'🚢','Fitness':'💪','General Expenses':'💳'})[
+    Object.values({'Transit & Rideshare':'🚗','Online Shopping':'📦','Groceries':'🛒','Food & Dining':'🍔','Coffee & Drinks':'☕','Subscriptions':'📺','Gas':'⛽','Education':'🎓','Travel':'🚢','Fitness':'💪','General Expenses':'💳'}).indexOf(
+      Object.fromEntries(Object.entries({'Transit & Rideshare':'🚗','Online Shopping':'📦','Groceries':'🛒','Food & Dining':'🍔','Coffee & Drinks':'☕','Subscriptions':'📺','Gas':'⛽','Education':'🎓','Travel':'🚢','Fitness':'💪','General Expenses':'💳'}))[cat]||'💳'
+    )
+  ]||[cat,'💳'];
+  const emoji=catEmoji[1]||'💳';
   const iconEl=document.getElementById('catBreakIcon');
   iconEl.textContent=emoji;
   iconEl.style.background=color+'33';
@@ -1311,8 +1268,8 @@ function renderCashFlowChart(data, chartId, labelsId, showFull){
   const lineColor=isUp?'#34c759':'#ff3b30';
 
   chartEl.innerHTML=`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="overflow:visible;">
-    <defs><linearGradient id="cfGrad_${chartId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${lineColor}" stop-opacity="0.3"/><stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/></linearGradient></defs>
-    <path d="${areaD}" fill="url(#cfGrad_${chartId})"/>
+    <defs><linearGradient id="cfGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${lineColor}" stop-opacity="0.3"/><stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/></linearGradient></defs>
+    <path d="${areaD}" fill="url(#cfGrad)"/>
     <path d="${pathD}" fill="none" stroke="${lineColor}" stroke-width="${showFull?2.5:1.5}" stroke-linecap="round" stroke-linejoin="round"/>
     ${showFull?'<line id="cfScrubLine" y1="0" y2="'+H+'" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4" display="none" pointer-events="none"/><g id="cfScrubDot" display="none" pointer-events="none"><circle r="6" fill="'+lineColor+'" stroke="var(--card)" stroke-width="3"/></g>':''}
   </svg>`;
@@ -1352,50 +1309,6 @@ function renderCashFlowChart(data, chartId, labelsId, showFull){
        lastScrubIdx = -1;
     };
   }
-}
-
-async function checkNewMonth(){
-  const months=MONTHS;
-  const now=new Date();
-  const thisMonth=months[now.getMonth()];
-  const lastMonthIdx=now.getMonth()-1;
-  if(lastMonthIdx<0)return;
-  const lastMonth=months[lastMonthIdx];
-
-  try{
-    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},
-      body:JSON.stringify({action:'checkStartingBalances',month:thisMonth})});
-    const data=await res.json();
-    if(data.isEmpty){
-      const res2=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},
-        body:JSON.stringify({action:'checkClosingBalances',month:lastMonth})});
-      const data2=await res2.json();
-      if(data2.hasData){
-        document.getElementById('copyMonthTitle').textContent="It's a new month! 🎉";
-        document.getElementById('copyMonthDesc').textContent=`Copy ${lastMonth}'s closing balances as ${thisMonth}'s starting balances?`;
-        document.getElementById('copyMonthModal').classList.add('open');
-      }
-    }
-  }catch(e){}
-}
-
-async function confirmCopyMonth(){
-  document.getElementById('copyMonthModal').classList.remove('open');
-  const now=new Date();
-  const lastMonth=MONTHS[now.getMonth()-1];
-  const thisMonth=MONTHS[now.getMonth()];
-  showToast('Copying balances...');
-  try{
-    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},
-      body:JSON.stringify({action:'copyClosingToStarting',fromMonth:lastMonth,toMonth:thisMonth})});
-    const data=await res.json();
-    if(data.success){
-      showToast('✅ Starting balances copied!');
-      setTimeout(()=>{cachedData=null;window._balAnimated=false;reloadDashboard();},800);
-    } else {
-      showToast(data.error||'Copy failed','error');
-    }
-  }catch(e){showToast('Network error','error');}
 }
 
 function showToast(msg,type){
