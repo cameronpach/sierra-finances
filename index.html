@@ -567,7 +567,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5
 <div class="toast" id="toast"></div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbzB91Z1YA9xucxckdtjkbA3xHue7n-0FmOM6UfCfavCOVgKhhDPRuyutXoU0ca3J4iKaA/exec";
+const API = "https://script.google.com/macros/s/AKfycbw1BrwcTIGcNcVzzBwGpQ-IHljXH4JO40HSFayTlloVbYVPMPIynpPcl2vhsInqmu5z7g/exec";
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const ACCT_COLORS = {"Savings":"#db2777","Checking":"#f43f5e","Car":"#06b6d4","Phone":"#10b981","Gas":"#f59e0b","Credit Card":"#4c0519"};
 const ACCT_ICONS = {"Savings":"💰","Checking":"🏦","Car":"🚗","Phone":"📱","Gas":"⛽","Credit Card":"💳"};
@@ -1081,10 +1081,8 @@ async function submitTransaction(){
   finally{btn.disabled=false;btn.classList.remove('loading');}
 }
 
-// CUSTOM EMOJI — persisted via localStorage
 function accountEmoji(acct){
-  const custom=JSON.parse(localStorage.getItem('acctEmojis_sierra')||'{}');
-  return custom[acct]||ACCT_ICONS[acct]||'💼';
+  return ACCT_ICONS[acct]||'💼';
 }
 
 function openAccountDetail(acct){
@@ -1118,17 +1116,6 @@ function openAccountDetail(acct){
   document.getElementById('acctDetailModal').classList.add('open');
 }
 
-// CUSTOM EMOJI PICKER — long press account card
-
-
-function saveEmoji(acct,emoji,el){
-  const custom=JSON.parse(localStorage.getItem('acctEmojis_sierra')||'{}');
-  custom[acct]=emoji;
-  localStorage.setItem('acctEmojis_sierra',JSON.stringify(custom));
-  el.remove();
-  if(cachedData)renderDashboard(cachedData);
-  showToast('Icon updated!');
-}
 
 // ANIMATED BALANCE COUNTER
 function animateCount(el, target, prefix='$', duration=800){
